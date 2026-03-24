@@ -1,0 +1,124 @@
+table Date
+	lineageTag: c48f6a41-a9ad-4d39-aa41-391a0028dc0e
+
+	column DateKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 87cd2b2d-1a30-415b-ac31-1f59c54211c8
+		summarizeBy: none
+		sourceColumn: DateKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 33e10449-6bbd-454a-923c-d26361216a6b
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: dcc9dce8-f16e-475c-8504-a5f37ca74bba
+			defaultHierarchy: LocalDateTable_87e6b348-0408-4951-b0f3-0fbd21934f5e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Fiscal Year'
+		dataType: string
+		lineageTag: 75dcbae9-24ef-4c50-b114-eb571ff3fff6
+		summarizeBy: none
+		sourceColumn: Fiscal Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fiscal Quarter'
+		dataType: string
+		lineageTag: 13834149-3ed6-4475-a5d1-53f25ed0e35d
+		summarizeBy: none
+		sourceColumn: Fiscal Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e5b0f3bd-5075-455e-8785-67ecaa23f054
+		summarizeBy: none
+		sourceColumn: Month
+
+		variation Variation
+			isDefault
+			relationship: c4ef9ef5-46c3-4a63-b279-37062f38cc8f
+			defaultHierarchy: LocalDateTable_c3c90056-5c5a-4fc9-b5ed-d9d7ecfb52d0.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Full Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4472631c-d53e-4650-bc19-351a2fa2b7d3
+		summarizeBy: none
+		sourceColumn: Full Date
+
+		variation Variation
+			isDefault
+			relationship: 788b01d6-0da1-4d50-89ed-76e0663bedf8
+			defaultHierarchy: LocalDateTable_12883ea4-6d09-40b0-9852-d46041fabf9b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column MonthKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 504b5a69-c6d9-4b7a-9dc1-c2d38efe3949
+		summarizeBy: count
+		sourceColumn: MonthKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy Fiscal
+		lineageTag: 1c64e74e-5bd7-48cf-88b3-b57812d20853
+
+		level Year
+			lineageTag: ca0a9216-2762-4fdc-b766-0267372bdc53
+			column: 'Fiscal Year'
+
+		level Quarter
+			lineageTag: 2297b32f-b44c-4b85-a7de-366550810743
+			column: 'Fiscal Quarter'
+
+		level Month
+			lineageTag: a2eb0d13-e6eb-450e-9d9c-dfd13f0410fc
+			column: Month
+
+		level Date
+			lineageTag: 1d4b015c-d59f-4fda-8b03-a35a704cbb9a
+			column: Date
+
+	partition Date = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\TA25851\Downloads\AdventureWorks Sales.xlsx"), null, true),
+				    Date_Table = Source{[Item="Date",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(Date_Table,{{"DateKey", Int64.Type}, {"Date", type date}, {"Fiscal Year", type text}, {"Fiscal Quarter", type text}, {"Month", type date}, {"Full Date", type date}, {"MonthKey", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

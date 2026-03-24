@@ -1,0 +1,100 @@
+table Customer
+	lineageTag: 8f1bcb4b-df6e-457a-b248-b4610b5ee2a6
+
+	column CustomerKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 96bd7bac-328a-45c9-90ff-a1be7d8b31d7
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Customer ID'
+		dataType: string
+		lineageTag: 3897db4a-8357-4a0c-bbdf-ff194dbadf21
+		summarizeBy: none
+		sourceColumn: Customer ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Customer
+		dataType: string
+		lineageTag: 96e75ea2-7a37-46ee-a6f2-d90deaee0cdc
+		summarizeBy: none
+		sourceColumn: Customer
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: 91fbf47b-19c4-421e-91ba-ea00e1392ce4
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column State-Province
+		dataType: string
+		lineageTag: 06ac1288-31d3-40f8-8740-5d347faad8ca
+		summarizeBy: none
+		sourceColumn: State-Province
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country-Region
+		dataType: string
+		lineageTag: c4098ca7-0e6c-4031-900e-21e9286795f9
+		summarizeBy: none
+		sourceColumn: Country-Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Postal Code'
+		dataType: string
+		lineageTag: 6612da81-431c-4502-8377-76e312330406
+		summarizeBy: none
+		sourceColumn: Postal Code
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy Geography
+		lineageTag: 881e7ea1-a228-4702-911f-60e3874ba019
+
+		level Country-Region
+			lineageTag: eb619740-6a61-47f1-a77d-8b7cc7c21210
+			column: Country-Region
+
+		level State-Province
+			lineageTag: b6dfff46-bd05-4304-9be8-20e887e1d939
+			column: State-Province
+
+		level City
+			lineageTag: ad136422-2af5-45cc-b0c9-42029a2caf0a
+			column: City
+
+		level 'Postal Code'
+			lineageTag: ab3d0b89-0182-40e5-8b79-c94e2f92f5af
+			column: 'Postal Code'
+
+		level Customer
+			lineageTag: d9368e7a-59e7-4eab-b98f-9065a58ba3f8
+			column: Customer
+
+	partition Customer = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\TA25851\Downloads\AdventureWorks Sales.xlsx"), null, true),
+				    Customer_Table = Source{[Item="Customer",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(Customer_Table,{{"CustomerKey", Int64.Type}, {"Customer ID", type text}, {"Customer", type text}, {"City", type text}, {"State-Province", type text}, {"Country-Region", type text}, {"Postal Code", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

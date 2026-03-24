@@ -1,0 +1,70 @@
+table 'Sales Territory'
+	lineageTag: 287bf924-a6d5-44df-9c8b-f3701a09e901
+
+	column SalesTerritoryKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8376349f-a36f-4f87-89f5-bd4444b51122
+		summarizeBy: none
+		sourceColumn: SalesTerritoryKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 9113bf0f-932a-466a-9a12-ff9d68f81725
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: 58955007-aeec-4a32-98ec-2cbcca140d4e
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column Group
+		dataType: string
+		lineageTag: 1d74355a-c589-4a2f-bd3c-7f35a11fe31d
+		summarizeBy: none
+		sourceColumn: Group
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'Sales Territories'
+		lineageTag: eaf02e2d-e329-4917-9069-63bfe9df710f
+
+		level Group
+			lineageTag: 023c0935-cfaf-42cd-b7ba-fb3a2ea3ecb9
+			column: Group
+
+		level Country
+			lineageTag: 89949127-5c91-4be7-93b1-6bbc6c8e560d
+			column: Country
+
+		level Region
+			lineageTag: cae489a5-bb2a-4bd8-ba8d-8c5c9bdbd900
+			column: Region
+
+	partition 'Sales Territory' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\TA25851\Downloads\AdventureWorks Sales.xlsx"), null, true),
+				    SalesTerritory_Table = Source{[Item="SalesTerritory",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(SalesTerritory_Table,{{"SalesTerritoryKey", Int64.Type}, {"Region", type text}, {"Country", type text}, {"Group", type text}})
+				in
+				    #"Changed Type"
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
